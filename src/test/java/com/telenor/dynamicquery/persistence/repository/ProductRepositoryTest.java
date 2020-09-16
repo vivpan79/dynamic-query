@@ -20,8 +20,11 @@ class ProductRepositoryTest {
 
     @Test
     void givenProductRepositoryWhenSaveAndRetrieveEntityThenOK(){
-        Product product = repository.save(new Product());
+        Product entity = new Product();
+        entity.setStoreAddress("anywhere");
+        Product product = repository.save(entity);
         Optional<Product> retrievedProduct = repository.findById(product.getId());
-        assertNotNull(retrievedProduct);
+        assertTrue(retrievedProduct.isPresent());
+        assertEquals("anywhere", retrievedProduct.get().getStoreAddress());
     }
 }
