@@ -1,5 +1,6 @@
 package com.telenor.dynamicquery.persistence.entity;
 
+import com.telenor.dynamicquery.common.ProductProperty;
 import com.telenor.dynamicquery.common.ProductType;
 import java.math.BigDecimal;
 import javax.persistence.Column;
@@ -43,6 +44,8 @@ public abstract class Product {
     }
 
     public abstract ProductType getProductType();
+
+    public abstract ProductProperty getProductProperty();
 
     public BigDecimal getPrice() {
         return price;
