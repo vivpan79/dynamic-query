@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.telenor.dynamicquery.Application;
 import com.telenor.dynamicquery.common.ProductType;
+import com.telenor.dynamicquery.persistence.entity.Phone;
 import com.telenor.dynamicquery.persistence.entity.Product;
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -21,10 +22,9 @@ class ProductRepositoryTest {
     private ProductRepository repository;
 
     @Test
-    void givenProductRepositoryWhenSaveAndRetrieveEntityThenOK(){
-        Product entity = new Product();
+    void givenProductRepositoryWhenSaveAndRetrieveProductEntityThenOK(){
+        Product entity = new Phone();
         entity.setStoreAddress("anywhere");
-        entity.setProductType(ProductType.PHONE);
         entity.setPrice(BigDecimal.valueOf(123.12));
         Product product = repository.save(entity);
         Optional<Product> retrievedProduct = repository.findById(product.getId());
@@ -32,5 +32,18 @@ class ProductRepositoryTest {
         assertEquals("anywhere", retrievedProduct.get().getStoreAddress());
         assertEquals(ProductType.PHONE, retrievedProduct.get().getProductType());
         assertEquals(123.12, retrievedProduct.get().getPrice().doubleValue());
+    }
+
+    @Test
+    void givenProductRepositoryWhenSaveAndRetrievePhoneEntityThenOK(){
+        Phone entity = new Phone();
+        entity.setColor("Blue");
+        Phone product = repository.save(entity);
+        Optional<Product> retrievedProduct = repository.findById(product.getId());
+        assertTrue(retrievedProduct.isPresent());
+        assertEquals(ProductType.PHONE, retrievedProduct.get().getProductType());
+        assertTrue(retrievedProduct.get() instanceof Phone);
+        Phone phone = (Phone)retrievedProduct.get();
+        assertEquals("Blue", phone.getColor());
     }
 }

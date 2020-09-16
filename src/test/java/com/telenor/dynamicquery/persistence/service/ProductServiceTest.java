@@ -4,6 +4,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import com.telenor.dynamicquery.persistence.entity.Phone;
 import com.telenor.dynamicquery.persistence.entity.Product;
 import com.telenor.dynamicquery.persistence.repository.ProductRepository;
 import org.junit.jupiter.api.Test;
@@ -22,8 +23,8 @@ public class ProductServiceTest {
 
     @Test
     void givenProductServiceWhenSaveAndRetrieveEntityThenOK() {
-        when(repository.save(any(Product.class))).thenReturn(new Product());
-        Product product = service.save(new Product());
+        when(repository.save(any(Product.class))).thenReturn(new Phone());
+        Product product = service.save(new Phone());
         assertNotNull(product);
     }
 }
