@@ -1,4 +1,4 @@
-package com.telenor.dynamicquery.persistence.controller;
+package com.telenor.dynamicquery.controller;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
@@ -47,10 +47,10 @@ public class ProductRestControllerTest {
         mvc.perform(get("/products/")
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$", hasSize(2)))
-            .andExpect(jsonPath("$[0].properties", is("color:blue")))
-            .andExpect(jsonPath("$[0].productType", is("phone")))
-            .andExpect(jsonPath("$[1].properties", is("gb_limit:10")))
-            .andExpect(jsonPath("$[1].productType", is("subscription")));
+            .andExpect(jsonPath("$.data", hasSize(2)))
+            .andExpect(jsonPath("$.data[0].properties", is("color:blue")))
+            .andExpect(jsonPath("$.data[0].productType", is("phone")))
+            .andExpect(jsonPath("$.data[1].properties", is("gb_limit:10")))
+            .andExpect(jsonPath("$.data[1].productType", is("subscription")));
     }
 }

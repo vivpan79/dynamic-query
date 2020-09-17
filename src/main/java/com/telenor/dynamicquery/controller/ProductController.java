@@ -1,4 +1,4 @@
-package com.telenor.dynamicquery.persistence.controller;
+package com.telenor.dynamicquery.controller;
 
 import static java.util.stream.Collectors.toList;
 
@@ -18,10 +18,10 @@ public class ProductController {
     private ProductService service;
 
     @GetMapping("/")
-    public List<RestProduct> findAll() {
+    public ResponseData findAll() {
 
         List<Product> products = service.findAll();
-        return products.stream().map(RestProduct::new)
-            .collect(toList());
+        return new ResponseData(products.stream().map(RestProduct::new)
+            .collect(toList()));
     }
 }

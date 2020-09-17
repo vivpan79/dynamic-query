@@ -1,4 +1,4 @@
-package com.telenor.dynamicquery.persistence.controller;
+package com.telenor.dynamicquery.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

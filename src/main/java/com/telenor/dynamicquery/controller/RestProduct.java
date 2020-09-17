@@ -1,4 +1,4 @@
-package com.telenor.dynamicquery.persistence.controller;
+package com.telenor.dynamicquery.controller;
 
 import com.telenor.dynamicquery.common.ProductType;
 import com.telenor.dynamicquery.persistence.entity.Phone;
@@ -8,10 +8,10 @@ import java.math.BigDecimal;
 
 public class RestProduct {
 
-    private String productType;
-    private String properties;
-    private BigDecimal price;
-    private String store_address;
+    private final String productType;
+    private final String properties;
+    private final BigDecimal price;
+    private final String store_address;
 
     public RestProduct(Product product) {
         this.productType = getProductType(product);
