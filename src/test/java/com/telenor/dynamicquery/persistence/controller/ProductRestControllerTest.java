@@ -33,23 +33,24 @@ public class ProductRestControllerTest {
     private ProductService service;
 
     @Test
-    public void givenEmployees_whenGetEmployees_thenReturnJsonArray()
+    public void givenProductServiceWhenGetProductsThenReturnJsonArray()
         throws Exception {
 
-        Product phone = new Phone();
+        Phone phone = new Phone();
+        phone.setColor("blue");
         Subscription subscription = new Subscription();
-
+        subscription.setDataLimitInGB(10L);
         List<Product> products = Arrays.asList(phone, subscription);
 
         given(service.findAll()).willReturn(products);
 
-        mvc.perform(get("/product/all")
+        mvc.perform(get("/products/")
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(2)))
-            .andExpect(jsonPath("$[0].productProperty", is(phone.getProductProperty().name())))
-            .andExpect(jsonPath("$[0].productType", is(phone.getProductType().name())))
-            .andExpect(jsonPath("$[1].productProperty", is(subscription.getProductProperty().name())))
-            .andExpect(jsonPath("$[1].productType", is(subscription.getProductType().name())));
+            .andExpect(jsonPath("$[0].properties", is("color:blue")))
+            .andExpect(jsonPath("$[0].productType", is("phone")))
+            .andExpect(jsonPath("$[1].properties", is("gb_limit:10")))
+            .andExpect(jsonPath("$[1].productType", is("subscription")));
     }
 }

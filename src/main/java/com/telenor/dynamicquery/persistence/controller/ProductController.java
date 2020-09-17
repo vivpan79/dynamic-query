@@ -1,5 +1,7 @@
 package com.telenor.dynamicquery.persistence.controller;
 
+import static java.util.stream.Collectors.toList;
+
 import com.telenor.dynamicquery.persistence.entity.Product;
 import com.telenor.dynamicquery.persistence.service.ProductService;
 import java.util.List;
@@ -9,14 +11,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/product")
+@RequestMapping("/products")
 public class ProductController {
 
     @Autowired
     private ProductService service;
 
-    @GetMapping("/all")
-    public List<Product> findAll() {
-        return service.findAll();
+    @GetMapping("/")
+    public List<RestProduct> findAll() {
+
+        List<Product> products = service.findAll();
+        return products.stream().map(RestProduct::new)
+            .collect(toList());
     }
 }
