@@ -8,10 +8,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.telenor.dynamicquery.persistence.entity.Phone;
-import com.telenor.dynamicquery.persistence.entity.Product;
 import com.telenor.dynamicquery.persistence.entity.Subscription;
-import com.telenor.dynamicquery.persistence.service.ProductService;
-import java.util.Arrays;
+import com.telenor.dynamicquery.persistence.service.PhoneService;
+import com.telenor.dynamicquery.persistence.service.SubscriptionService;
+import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,33 +24,54 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(ProductController.class)
-public class ProductRestControllerTest {
+class ProductRestControllerTest {
 
     @Autowired
     private MockMvc mvc;
 
     @MockBean
-    private ProductService service;
+    private PhoneService phoneService;
+
+    @MockBean
+    private SubscriptionService subscriptionService;
 
     @Test
-    public void givenProductServiceWhenGetProductsThenReturnJsonArray()
-        throws Exception {
-
+    void givenPhoneServiceWhenGetProductsThenReturnJsonArray() throws Exception {
         Phone phone = new Phone();
         phone.setColor("blue");
-        Subscription subscription = new Subscription();
-        subscription.setDataLimitInGB(10L);
-        List<Product> products = Arrays.asList(phone, subscription);
-
-        given(service.findAll()).willReturn(products);
-
+        List<Phone> products = Collections.singletonList(phone);
+        given(phoneService.findAll("100", "1000", "blue", "Stockholm")).willReturn(products);
         mvc.perform(get("/products/")
+            .param("productType", "phone")
+            .param("min_price", "100")
+            .param("max_price", "1000")
+            .param("city", "Stockholm")
+            .param("productProperty:color", "blue")
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.data", hasSize(2)))
-            .andExpect(jsonPath("$.data[0].properties", is("color:blue")))
+            .andExpect(jsonPath("$.data", hasSize(1)))
             .andExpect(jsonPath("$.data[0].productType", is("phone")))
-            .andExpect(jsonPath("$.data[1].properties", is("gb_limit:10")))
-            .andExpect(jsonPath("$.data[1].productType", is("subscription")));
+            .andExpect(jsonPath("$.data[0].properties", is("color:blue")));
+    }
+
+    @Test
+    void givenSubscriptionServiceWhenGetProductsThenReturnJsonArray() throws Exception {
+        Subscription subscription = new Subscription();
+        subscription.setDataLimitInGB(50L);
+        List<Subscription> products = Collections.singletonList(subscription);
+        given(subscriptionService.findAll("100", "1000", "50", "50", "Stockholm")).willReturn(products);
+
+        mvc.perform(get("/products/")
+            .param("productType", "subscription")
+            .param("min_price", "100")
+            .param("max_price", "1000")
+            .param("city", "Stockholm")
+            .param("productProperty:gb_limit_min", "50")
+            .param("productProperty:gb_limit_max", "50")
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.data", hasSize(1)))
+            .andExpect(jsonPath("$.data[0].productType", is("subscription")))
+            .andExpect(jsonPath("$.data[0].properties", is("gb_limit:50")));
     }
 }

@@ -6,24 +6,25 @@ import static org.mockito.Mockito.when;
 
 import com.telenor.dynamicquery.persistence.entity.Phone;
 import com.telenor.dynamicquery.persistence.entity.Product;
+import com.telenor.dynamicquery.persistence.repository.PhoneRepository;
 import com.telenor.dynamicquery.persistence.repository.ProductRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-@WebMvcTest(ProductService.class)
-public class ProductServiceTest {
+@WebMvcTest(PhoneService.class)
+class ProductServiceTest {
 
     @MockBean
-    private ProductRepository repository;
+    private PhoneRepository repository;
 
     @Autowired
-    private ProductService service;
+    private PhoneService service;
 
     @Test
     void givenProductServiceWhenSaveAndRetrieveEntityThenOK() {
-        when(repository.save(any(Product.class))).thenReturn(new Phone());
+        when(repository.save(any())).thenReturn(new Phone());
         Product product = service.save(new Phone());
         assertNotNull(product);
     }
