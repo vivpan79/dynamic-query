@@ -72,9 +72,17 @@ Example: GET /products?productType=subscription&max_price=1000&city=Stockholm
 }
 ----
 '''
+To access swagger-ui go to following url
 
-You can access the database using h2 console at following url
+http://localhost:8080/swagger-ui/#/product-controller/
+
+
+To access the database using h2 console go to following url
 
 http://localhost:8080/h2-console/
 
 '''
+
+----
+Please Note: Query parameter 'productProperty' seemed redundant, so has not been used in the implementation. But has been included to comply with the contract.
+----
