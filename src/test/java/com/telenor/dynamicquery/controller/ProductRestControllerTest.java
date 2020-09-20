@@ -79,10 +79,18 @@ class ProductRestControllerTest {
     }
 
     @Test
-    void givenSubscriptionServiceWhenWrongProductTypeThenReturnJsonArray() throws Exception {
+    void givenSubscriptionServiceWhenWrongProductTypeThenReturnBadRequest() throws Exception {
         mvc.perform(get("/products")
             .param("productType", "SomeThing")
             .contentType(APPLICATION_JSON))
             .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void givenRestServiceWhenRootUrlThenReturnWelcomeMessage() throws Exception {
+        mvc.perform(get("/")
+            .contentType(APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$", is("Welcome to Telenor's take-home assignment: Dynamic Query")));
     }
 }
