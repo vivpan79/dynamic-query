@@ -29,14 +29,14 @@ public class ProductController {
         @RequestParam(name = "city", required = false) String city,
         @RequestParam(name = "property", required = false) String property,
         @RequestParam(name = "productProperty:color", required = false) String color,
-        @RequestParam(name = "productProperty:gb_limit_min", required = false) String minimumGBLimit,
-        @RequestParam(name = "productProperty:gb_limit_max", required = false) String maxGBLimit
+        @RequestParam(name = "productProperty:gb_limit_min", required = false) Long minGBLimit,
+        @RequestParam(name = "productProperty:gb_limit_max", required = false) Long maxGBLimit
     ) {
         List<? extends Product> products;
         if (type.equalsIgnoreCase(PHONE.name())) {
             products = phoneService.findAll(minPrice, maxPrice, color, city);
         } else if (type.equalsIgnoreCase(SUBSCRIPTION.name())) {
-            products = subscriptionService.findAll(minPrice, maxPrice, minimumGBLimit, maxGBLimit, city);
+            products = subscriptionService.findAll(minPrice, maxPrice, minGBLimit, maxGBLimit, city);
         } else {
             throw new IllegalArgumentException("Invalid ProductType: " + type);
         }

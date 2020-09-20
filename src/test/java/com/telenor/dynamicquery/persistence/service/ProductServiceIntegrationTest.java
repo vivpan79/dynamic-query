@@ -48,7 +48,7 @@ class ProductServiceIntegrationTest {
         Phone phone = retrievedProducts.get(0);
         assertEquals(PHONE, phone.getProductType());
         assertEquals("Blake gränden, Karlskrona", phone.getStoreAddress());
-        assertEquals("grön", ((Phone) phone).getColor());
+        assertEquals("grön", phone.getColor());
     }
 
     @Test
@@ -76,7 +76,32 @@ class ProductServiceIntegrationTest {
     @Test
     void givenProductServiceWhenFindSubscriptionByExactPriceMatchThenSubscriptionRetrieved() {
         List<Subscription> retrievedProducts = subscriptionService
-            .findAllSubscription(null, null, 50L, 50L, new Subscription());
+            .findAll("415.00", "415.00", null, null, null);
+        assertFalse(retrievedProducts.isEmpty());
+        assertEquals(1, retrievedProducts.size());
+        assertTrue(retrievedProducts.stream().allMatch(
+            product -> SUBSCRIPTION.equals(product.getProductType())
+                && 415.00 == product.getPrice().doubleValue()
+        ));
+    }
+
+    @Test
+    void givenProductServiceWhenFindSubscriptionByPriceRangeThenSubscriptionRetrieved() {
+        List<Subscription> retrievedProducts = subscriptionService
+            .findAll("401.00", "499.00", null, null, null);
+        assertFalse(retrievedProducts.isEmpty());
+        assertEquals(10, retrievedProducts.size());
+        assertTrue(retrievedProducts.stream().allMatch(
+            product -> SUBSCRIPTION.equals(product.getProductType())
+                && 499.00 >= product.getPrice().doubleValue()
+                && 401.00 <= product.getPrice().doubleValue()
+        ));
+    }
+
+    @Test
+    void givenProductServiceWhenFindSubscriptionByExactDataLimitMatchThenSubscriptionRetrieved() {
+        List<Subscription> retrievedProducts = subscriptionService
+            .findAll(null, null, 50L, 50L, null);
         assertFalse(retrievedProducts.isEmpty());
         assertEquals(34, retrievedProducts.size());
         assertTrue(retrievedProducts.stream().allMatch(
@@ -86,15 +111,27 @@ class ProductServiceIntegrationTest {
     }
 
     @Test
-    void givenProductServiceWhenFindSubscriptionByPriceRangeThenSubscriptionRetrieved() {
+    void givenProductServiceWhenFindSubscriptionByDataLimitRangeThenSubscriptionRetrieved() {
         List<Subscription> retrievedProducts = (List<Subscription>) subscriptionService
-            .findAllSubscription(null, null, 10L, 50L, new Subscription());
+            .findAll(null, null, 10L, 50L, null);
         assertFalse(retrievedProducts.isEmpty());
         assertEquals(58, retrievedProducts.size());
         assertTrue(retrievedProducts.stream().allMatch(
             product -> SUBSCRIPTION.equals(product.getProductType())
                 && 50L >= product.getDataLimitInGB()
                 && 10L <= product.getDataLimitInGB()
+        ));
+    }
+
+    @Test
+    void givenProductServiceWhenFindSubscriptionByCityAddressThenSubscriptionRetrieved() {
+        List<Subscription> retrievedProducts = subscriptionService
+            .findAll(null, null, null, null, "Karlskrona");
+        assertFalse(retrievedProducts.isEmpty());
+        assertEquals(18, retrievedProducts.size());
+        assertTrue(retrievedProducts.stream().allMatch(
+            product -> SUBSCRIPTION.equals(product.getProductType())
+                && product.getStoreAddress().contains("Karlskrona")
         ));
     }
 }

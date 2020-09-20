@@ -59,7 +59,7 @@ class ProductRestControllerTest {
         Subscription subscription = new Subscription();
         subscription.setDataLimitInGB(50L);
         List<Subscription> products = Collections.singletonList(subscription);
-        given(subscriptionService.findAll("100", "1000", "50", "50", "Stockholm")).willReturn(products);
+        given(subscriptionService.findAll("100", "1000", 50L, 50L, "Stockholm")).willReturn(products);
 
         mvc.perform(get("/products")
             .param("productType", "subscription")

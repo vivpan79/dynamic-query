@@ -19,23 +19,16 @@ public class SubscriptionService {
     @Autowired
     private SubscriptionRepository repository;
 
-    public List<Subscription> findAll(String minPrice, String maxPrice, String minGBLimit, String maxGBLimit,
+    public List<Subscription> findAll(String minPrice, String maxPrice, Long minDataLimit, Long maxDataLimit,
         String city) {
         Subscription subscription = new Subscription();
-        subscription.setStoreAddress(city);
-        return findAllSubscription(minPrice, maxPrice, Long.parseLong(minGBLimit), Long.parseLong(maxGBLimit),
-            subscription);
-    }
-
-    public List<Subscription> findAllSubscription(String minPrice, String maxPrice, Long minDataLimit,
-        Long maxDataLimit, Subscription subscription) {
         ExampleMatcher exampleMatcher = ExampleMatcher.matching().withIgnorePaths("id");
-        return repository.findAll(getSubscriptionSpecification(minPrice, maxPrice, minDataLimit, maxDataLimit,
+        return repository.findAll(getSubscriptionSpecification(minPrice, maxPrice, minDataLimit, maxDataLimit, city,
             Example.of(subscription, exampleMatcher)));
     }
 
     Specification<Subscription> getSubscriptionSpecification(String minPrice, String maxPrice,
-        Long minDataLimit, Long maxDataLimit, Example<Subscription> example) {
+        Long minDataLimit, Long maxDataLimit, String city, Example<Subscription> example) {
         return (root, query, builder) -> {
             final List<Predicate> predicates = new ArrayList<>();
             if (minPrice != null && !minPrice.isEmpty()) {
@@ -49,6 +42,9 @@ public class SubscriptionService {
             }
             if (maxDataLimit != null) {
                 predicates.add(builder.lessThanOrEqualTo(root.get("dataLimitInGB"), maxDataLimit));
+            }
+            if (city != null && !city.isEmpty()) {
+                predicates.add(builder.like(root.get("storeAddress"), "%" + city + "%"));
             }
             predicates.add(QueryByExamplePredicateBuilder.getPredicate(root, builder, example));
 
