@@ -4,6 +4,7 @@ import static com.telenor.dynamicquery.common.ProductType.PHONE;
 import static com.telenor.dynamicquery.common.ProductType.SUBSCRIPTION;
 import static java.util.stream.Collectors.toList;
 
+import com.telenor.dynamicquery.controller.error.InvalidProductTypeException;
 import com.telenor.dynamicquery.persistence.entity.Product;
 import com.telenor.dynamicquery.persistence.service.PhoneService;
 import com.telenor.dynamicquery.persistence.service.SubscriptionService;
@@ -11,6 +12,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,6 +23,11 @@ public class ProductController {
     private PhoneService phoneService;
     @Autowired
     private SubscriptionService subscriptionService;
+
+    @RequestMapping("/")
+    public String welcome() {
+        return "Welcome to Telenor's take-home assignment: Dynamic Query";
+    }
 
     @GetMapping("/products")
     public ResponseData findAllMatching(
@@ -39,7 +46,7 @@ public class ProductController {
         } else if (SUBSCRIPTION.name().equalsIgnoreCase(type)) {
             products = subscriptionService.findAll(minPrice, maxPrice, minGBLimit, maxGBLimit, city);
         } else {
-            throw new IllegalArgumentException("Invalid ProductType: " + type);
+            throw new InvalidProductTypeException("Invalid ProductType: " + type);
         }
         return new ResponseData(products.stream().map(RestProduct::new).collect(toList()));
     }

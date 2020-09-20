@@ -77,4 +77,12 @@ class ProductRestControllerTest {
             .andExpect(jsonPath("$.data[0].productType", is("subscription")))
             .andExpect(jsonPath("$.data[0].properties", is("gb_limit:50")));
     }
+
+    @Test
+    void givenSubscriptionServiceWhenWrongProductTypeThenReturnJsonArray() throws Exception {
+        mvc.perform(get("/products")
+            .param("productType", "SomeThing")
+            .contentType(APPLICATION_JSON))
+            .andExpect(status().isBadRequest());
+    }
 }
