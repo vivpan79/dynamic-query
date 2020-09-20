@@ -1,8 +1,9 @@
 package com.telenor.dynamicquery.controller;
 
+import static com.telenor.dynamicquery.common.ProductType.PHONE;
+import static com.telenor.dynamicquery.common.ProductType.SUBSCRIPTION;
 import static java.util.stream.Collectors.toList;
 
-import com.telenor.dynamicquery.common.ProductType;
 import com.telenor.dynamicquery.persistence.entity.Product;
 import com.telenor.dynamicquery.persistence.service.PhoneService;
 import com.telenor.dynamicquery.persistence.service.SubscriptionService;
@@ -20,7 +21,7 @@ public class ProductController {
     @Autowired
     private SubscriptionService subscriptionService;
 
-    @GetMapping("/products/")
+    @GetMapping("/products")
     public ResponseData findAllMatching(
         @RequestParam(name = "productType", required = false) String type,
         @RequestParam(name = "min_price", required = false) String minPrice,
@@ -32,9 +33,9 @@ public class ProductController {
         @RequestParam(name = "productProperty:gb_limit_max", required = false) String maxGBLimit
     ) {
         List<? extends Product> products;
-        if (type.equalsIgnoreCase(ProductType.PHONE.name())) {
+        if (type.equalsIgnoreCase(PHONE.name())) {
             products = phoneService.findAll(minPrice, maxPrice, color, city);
-        } else if (type.equalsIgnoreCase(ProductType.SUBSCRIPTION.name())) {
+        } else if (type.equalsIgnoreCase(SUBSCRIPTION.name())) {
             products = subscriptionService.findAll(minPrice, maxPrice, minimumGBLimit, maxGBLimit, city);
         } else {
             throw new IllegalArgumentException("Invalid ProductType: " + type);

@@ -3,6 +3,7 @@ package com.telenor.dynamicquery.controller;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -18,7 +19,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -41,13 +41,13 @@ class ProductRestControllerTest {
         phone.setColor("blue");
         List<Phone> products = Collections.singletonList(phone);
         given(phoneService.findAll("100", "1000", "blue", "Stockholm")).willReturn(products);
-        mvc.perform(get("/products/")
+        mvc.perform(get("/products")
             .param("productType", "phone")
             .param("min_price", "100")
             .param("max_price", "1000")
             .param("city", "Stockholm")
             .param("productProperty:color", "blue")
-            .contentType(MediaType.APPLICATION_JSON))
+            .contentType(APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.data", hasSize(1)))
             .andExpect(jsonPath("$.data[0].productType", is("phone")))
@@ -61,14 +61,14 @@ class ProductRestControllerTest {
         List<Subscription> products = Collections.singletonList(subscription);
         given(subscriptionService.findAll("100", "1000", "50", "50", "Stockholm")).willReturn(products);
 
-        mvc.perform(get("/products/")
+        mvc.perform(get("/products")
             .param("productType", "subscription")
             .param("min_price", "100")
             .param("max_price", "1000")
             .param("city", "Stockholm")
             .param("productProperty:gb_limit_min", "50")
             .param("productProperty:gb_limit_max", "50")
-            .contentType(MediaType.APPLICATION_JSON))
+            .contentType(APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.data", hasSize(1)))
             .andExpect(jsonPath("$.data[0].productType", is("subscription")))

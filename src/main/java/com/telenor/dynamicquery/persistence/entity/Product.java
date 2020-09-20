@@ -1,25 +1,26 @@
 package com.telenor.dynamicquery.persistence.entity;
 
+import static javax.persistence.DiscriminatorType.STRING;
+import static javax.persistence.GenerationType.IDENTITY;
+import static javax.persistence.InheritanceType.SINGLE_TABLE;
+
 import com.telenor.dynamicquery.common.ProductProperty;
 import com.telenor.dynamicquery.common.ProductType;
 import java.math.BigDecimal;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING, name = "type")
+@Inheritance(strategy = SINGLE_TABLE)
+@DiscriminatorColumn(discriminatorType = STRING, name = "type")
 @Entity(name = "products")
 public abstract class Product {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
     @Column(name = "store_address")

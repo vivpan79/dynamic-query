@@ -26,16 +26,12 @@ public class PhoneService {
     public List<Phone> findAll(String minPrice, String maxPrice, String color, String city) {
         Phone phone = new Phone();
         phone.setColor(color);
-        //phone.setStoreAddress(city);
-        return findAllPhones(minPrice, maxPrice, phone);
-    }
-
-    public List<Phone> findAllPhones(String minPrice, String maxPrice, Phone phone) {
         ExampleMatcher exampleMatcher = ExampleMatcher.matching().withIgnorePaths("id");
-        return repository.findAll(getPhoneSpecification(minPrice, maxPrice, Example.of(phone, exampleMatcher)));
+        return repository.findAll(getPhoneSpecification(minPrice, maxPrice, city, Example.of(phone, exampleMatcher)));
     }
 
-    public Specification<Phone> getPhoneSpecification(String minPrice, String maxPrice, Example<Phone> example) {
+    public Specification<Phone> getPhoneSpecification(String minPrice, String maxPrice, String city,
+        Example<Phone> example) {
         return (root, query, builder) -> {
             final List<Predicate> predicates = new ArrayList<>();
             if (minPrice != null && !minPrice.isEmpty()) {
@@ -43,6 +39,9 @@ public class PhoneService {
             }
             if (maxPrice != null && !maxPrice.isEmpty()) {
                 predicates.add(builder.lessThanOrEqualTo(root.get("price"), new BigDecimal(maxPrice)));
+            }
+            if (city != null && !city.isEmpty()) {
+                predicates.add(builder.like(root.get("storeAddress"), "%" + city + "%"));
             }
             predicates.add(QueryByExamplePredicateBuilder.getPredicate(root, builder, example));
 

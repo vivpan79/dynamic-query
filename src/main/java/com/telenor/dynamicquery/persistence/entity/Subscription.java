@@ -1,5 +1,8 @@
 package com.telenor.dynamicquery.persistence.entity;
 
+import static com.telenor.dynamicquery.common.ProductProperty.GB_LIMIT;
+import static com.telenor.dynamicquery.common.ProductType.SUBSCRIPTION;
+
 import com.telenor.dynamicquery.common.ProductProperty;
 import com.telenor.dynamicquery.common.ProductType;
 import javax.persistence.Column;
@@ -18,12 +21,12 @@ public class Subscription extends Product {
 
     @Override
     public ProductType getProductType() {
-        return ProductType.SUBSCRIPTION;
+        return SUBSCRIPTION;
     }
 
     @Override
     public ProductProperty getProductProperty() {
-        return ProductProperty.GB_LIMIT;
+        return GB_LIMIT;
     }
 
     public Long getDataLimitInGB() {

@@ -1,5 +1,8 @@
 package com.telenor.dynamicquery.persistence.entity;
 
+import static com.telenor.dynamicquery.common.ProductProperty.COLOR;
+import static com.telenor.dynamicquery.common.ProductType.PHONE;
+
 import com.telenor.dynamicquery.common.ProductProperty;
 import com.telenor.dynamicquery.common.ProductType;
 import javax.persistence.Column;
@@ -18,12 +21,12 @@ public class Phone extends Product {
 
     @Override
     public ProductType getProductType() {
-        return ProductType.PHONE;
+        return PHONE;
     }
 
     @Override
     public ProductProperty getProductProperty() {
-        return ProductProperty.COLOR;
+        return COLOR;
     }
 
     public String getColor() {

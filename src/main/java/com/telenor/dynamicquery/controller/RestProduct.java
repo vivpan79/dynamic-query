@@ -1,6 +1,8 @@
 package com.telenor.dynamicquery.controller;
 
-import com.telenor.dynamicquery.common.ProductType;
+import static com.telenor.dynamicquery.common.ProductType.PHONE;
+import static com.telenor.dynamicquery.common.ProductType.SUBSCRIPTION;
+
 import com.telenor.dynamicquery.persistence.entity.Phone;
 import com.telenor.dynamicquery.persistence.entity.Product;
 import com.telenor.dynamicquery.persistence.entity.Subscription;
@@ -29,14 +31,14 @@ public class RestProduct {
     }
 
     String getvalue(Product product) {
-        if (ProductType.PHONE.equals(product.getProductType())) {
+        if (PHONE.equals(product.getProductType())) {
             String color = ((Phone) product).getColor();
             if (color == null || color.isEmpty()) {
                 throw new IllegalArgumentException("Color for phone missing!");
             }
             return color;
         }
-        if (ProductType.SUBSCRIPTION.equals(product.getProductType())) {
+        if (SUBSCRIPTION.equals(product.getProductType())) {
             Long dataLimitInGB = ((Subscription) product).getDataLimitInGB();
             if (dataLimitInGB == null) {
                 throw new IllegalArgumentException("Data Limit In GB for subscription missing!");

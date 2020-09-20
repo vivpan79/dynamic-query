@@ -1,10 +1,12 @@
 package com.telenor.dynamicquery.persistence.service;
 
+import static com.telenor.dynamicquery.common.ProductType.PHONE;
+import static com.telenor.dynamicquery.common.ProductType.SUBSCRIPTION;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.telenor.dynamicquery.Application;
-import com.telenor.dynamicquery.common.ProductType;
 import com.telenor.dynamicquery.persistence.entity.Phone;
 import com.telenor.dynamicquery.persistence.entity.Product;
 import com.telenor.dynamicquery.persistence.entity.Subscription;
@@ -27,40 +29,72 @@ class ProductServiceIntegrationTest {
 
     @Test
     void givenProductServiceWhenFindByPhoneByExactPriceMatchThenPhoneRetrieved() {
-        List<? extends Product> retrievedProducts = phoneService.findAll("277.00", "277.00", "grön", "Blake gränden, Karlskrona");
+        List<? extends Product> retrievedProducts = phoneService.findAll("277.00", "277.00", null, null);
+
         assertFalse(retrievedProducts.isEmpty());
         assertEquals(1, retrievedProducts.size());
-        assertEquals(ProductType.PHONE, retrievedProducts.get(0).getProductType());
-        assertEquals("Blake gränden, Karlskrona", retrievedProducts.get(0).getStoreAddress());
-        assertEquals("grön", ((Phone) retrievedProducts.get(0)).getColor());
+        Product product = retrievedProducts.get(0);
+        assertEquals(PHONE, product.getProductType());
+        assertEquals("Blake gränden, Karlskrona", product.getStoreAddress());
+        assertEquals("grön", ((Phone) product).getColor());
     }
 
     @Test
     void givenProductServiceWhenFindPhoneByPriceRangeThenPhoneRetrieved() {
-        List<Phone> retrievedProducts = (List<Phone>) phoneService.findAll("276.00", "278.00", "grön", "Blake gränden, Karlskrona");
+        List<Phone> retrievedProducts = phoneService.findAll("276.00", "278.00", null, null);
+
         assertFalse(retrievedProducts.isEmpty());
         assertEquals(1, retrievedProducts.size());
-        assertEquals(ProductType.PHONE, retrievedProducts.get(0).getProductType());
-        assertEquals("Blake gränden, Karlskrona", retrievedProducts.get(0).getStoreAddress());
-        assertEquals("grön", ((Phone) retrievedProducts.get(0)).getColor());
+        Phone phone = retrievedProducts.get(0);
+        assertEquals(PHONE, phone.getProductType());
+        assertEquals("Blake gränden, Karlskrona", phone.getStoreAddress());
+        assertEquals("grön", ((Phone) phone).getColor());
+    }
+
+    @Test
+    void givenProductServiceWhenFindPhoneByColorThenPhoneRetrieved() {
+        List<Phone> retrievedProducts = phoneService.findAll(null, null, "grön", null);
+        assertFalse(retrievedProducts.isEmpty());
+        assertEquals(5, retrievedProducts.size());
+        assertTrue(retrievedProducts.stream().allMatch(
+            product -> PHONE.equals(product.getProductType())
+                && "grön".equals(product.getColor())
+        ));
+    }
+
+    @Test
+    void givenProductServiceWhenFindPhoneByCityAddressThenPhoneRetrieved() {
+        List<Phone> retrievedProducts = phoneService.findAll(null, null, null, "Karlskrona");
+        assertFalse(retrievedProducts.isEmpty());
+        assertEquals(11, retrievedProducts.size());
+        assertTrue(retrievedProducts.stream().allMatch(
+            product -> PHONE.equals(product.getProductType())
+                && product.getStoreAddress().contains("Karlskrona")
+        ));
     }
 
     @Test
     void givenProductServiceWhenFindSubscriptionByExactPriceMatchThenSubscriptionRetrieved() {
-        List<? extends Product> retrievedProducts = subscriptionService.findAllSubscription(null, null, 50L, 50L, new Subscription());
+        List<Subscription> retrievedProducts = subscriptionService
+            .findAllSubscription(null, null, 50L, 50L, new Subscription());
         assertFalse(retrievedProducts.isEmpty());
         assertEquals(34, retrievedProducts.size());
-        assertEquals(ProductType.SUBSCRIPTION, retrievedProducts.get(0).getProductType());
-        assertEquals(50, ((Subscription) retrievedProducts.get(0)).getDataLimitInGB());
+        assertTrue(retrievedProducts.stream().allMatch(
+            product -> SUBSCRIPTION.equals(product.getProductType())
+                && 50L == product.getDataLimitInGB()
+        ));
     }
 
     @Test
     void givenProductServiceWhenFindSubscriptionByPriceRangeThenSubscriptionRetrieved() {
         List<Subscription> retrievedProducts = (List<Subscription>) subscriptionService
-            .findAllSubscription(null, null, 30L, 60L, new Subscription());
+            .findAllSubscription(null, null, 10L, 50L, new Subscription());
         assertFalse(retrievedProducts.isEmpty());
-        assertEquals(34, retrievedProducts.size());
-        assertEquals(ProductType.SUBSCRIPTION, retrievedProducts.get(0).getProductType());
-        assertEquals(50, ((Subscription) retrievedProducts.get(0)).getDataLimitInGB());
+        assertEquals(58, retrievedProducts.size());
+        assertTrue(retrievedProducts.stream().allMatch(
+            product -> SUBSCRIPTION.equals(product.getProductType())
+                && 50L >= product.getDataLimitInGB()
+                && 10L <= product.getDataLimitInGB()
+        ));
     }
 }
