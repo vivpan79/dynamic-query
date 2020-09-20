@@ -40,14 +40,14 @@ GET /products
 
 Query Parameter			        Description
 ----------------------------    ---------------------------------------------------------------
-productType					    The restProduct productType. (String 'phone' or 'subscription')
-min_price				        The minimum price in SEK. (Number)
-max_price				        The maximum price in SEK. (Number)
-city					        The city in which a store is located. (String)
-productProperty				    The name of the productProperty. (String 'color' or 'gb_limit')
-productProperty:color			The color of the phone. (String)
-productProperty:gb_limit_min 	The minimum GB limit of the subscription. (Number)
-productProperty:gb_limit_max 	The maximum GB limit of the subscription. (Number)
+productType                     The restProduct productType. (String 'phone' or 'subscription')
+min_price                       The minimum price in SEK. (Number)
+max_price                       The maximum price in SEK. (Number)
+city                            The city in which a store is located. (String)
+productProperty                 The name of the productProperty. (String 'color' or 'gb_limit')
+productProperty:color.          The color of the phone. (String)
+productProperty:gb_limit_min    The minimum GB limit of the subscription. (Number)
+productProperty:gb_limit_max    The maximum GB limit of the subscription. (Number)
 ----
 
 The expected response is a JSON array with the products in a 'data' wrapper. 
