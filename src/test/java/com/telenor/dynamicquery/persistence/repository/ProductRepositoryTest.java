@@ -10,7 +10,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.telenor.dynamicquery.Application;
 import com.telenor.dynamicquery.persistence.entity.Phone;
-import com.telenor.dynamicquery.persistence.entity.Product;
 import com.telenor.dynamicquery.persistence.entity.Subscription;
 import java.math.BigDecimal;
 import java.util.List;
@@ -20,22 +19,26 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Example;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = Application.class)
+@ActiveProfiles("dev")
 class ProductRepositoryTest {
 
     @Autowired
-    private ProductRepository repository;
+    private PhoneRepository phoneRepository;
+    @Autowired
+    private SubscriptionRepository subscriptionRepository;
 
     @Test
     void givenProductRepositoryWhenSaveAndRetrieveProductEntityThenOK() {
-        Product entity = new Phone();
+        Phone entity = new Phone();
         entity.setStoreAddress("anywhere");
         entity.setPrice(BigDecimal.valueOf(123.12));
-        Product product = repository.save(entity);
-        Optional<Product> retrievedProduct = repository.findById(product.getId());
+        Phone product = phoneRepository.save(entity);
+        Optional<Phone> retrievedProduct = phoneRepository.findById(product.getId());
         assertTrue(retrievedProduct.isPresent());
         assertEquals("anywhere", retrievedProduct.get().getStoreAddress());
         assertEquals(PHONE, retrievedProduct.get().getProductType());
@@ -46,8 +49,8 @@ class ProductRepositoryTest {
     void givenProductRepositoryWhenSaveAndRetrievePhoneEntityThenOK() {
         Phone entity = new Phone();
         entity.setColor("Blue");
-        Phone product = repository.save(entity);
-        Optional<Product> retrievedProduct = repository.findById(product.getId());
+        Phone product = phoneRepository.save(entity);
+        Optional<Phone> retrievedProduct = phoneRepository.findById(product.getId());
         assertTrue(retrievedProduct.isPresent());
         assertEquals(PHONE, retrievedProduct.get().getProductType());
         assertTrue(retrievedProduct.get() instanceof Phone);
@@ -60,8 +63,8 @@ class ProductRepositoryTest {
     void givenProductRepositoryWhenSaveAndRetrieveSubscriptionEntityThenOK1() {
         Subscription entity = new Subscription();
         entity.setDataLimitInGB(123L);
-        Subscription product = repository.save(entity);
-        Optional<Product> retrievedProduct = repository.findById(product.getId());
+        Subscription product = subscriptionRepository.save(entity);
+        Optional<Subscription> retrievedProduct = subscriptionRepository.findById(product.getId());
         assertTrue(retrievedProduct.isPresent());
         assertEquals(SUBSCRIPTION, retrievedProduct.get().getProductType());
         assertTrue(retrievedProduct.get() instanceof Subscription);
@@ -74,13 +77,13 @@ class ProductRepositoryTest {
     void givenProductRepositoryWhenQueryByExampleSubscriptionEntityThenOK() {
         Subscription subscription1 = new Subscription();
         subscription1.setPrice(new BigDecimal("321.12"));
-        repository.save(subscription1);
+        subscriptionRepository.save(subscription1);
         Subscription subscription2 = new Subscription();
         subscription2.setPrice(new BigDecimal("321.11"));
-        repository.save(subscription2);
+        subscriptionRepository.save(subscription2);
         Subscription queryByExample = new Subscription();
         queryByExample.setPrice(new BigDecimal("321.12"));
-        List<Subscription> retrievedProducts = repository.findAll(Example.of(queryByExample));
+        List<Subscription> retrievedProducts = subscriptionRepository.findAll(Example.of(queryByExample));
         assertFalse(retrievedProducts.isEmpty());
         assertEquals(1, retrievedProducts.size());
         assertEquals(SUBSCRIPTION, retrievedProducts.get(0).getProductType());
