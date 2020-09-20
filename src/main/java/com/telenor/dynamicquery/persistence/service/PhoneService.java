@@ -25,7 +25,7 @@ public class PhoneService {
 
     public List<Phone> findAll(String minPrice, String maxPrice, String color, String city) {
         Phone phone = new Phone();
-        //phone.setColor(color);
+        phone.setColor(color);
         //phone.setStoreAddress(city);
         return findAllPhones(minPrice, maxPrice, phone);
     }

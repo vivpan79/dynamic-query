@@ -27,7 +27,7 @@ class ProductServiceIntegrationTest {
 
     @Test
     void givenProductServiceWhenFindByPhoneByExactPriceMatchThenPhoneRetrieved() {
-        List<? extends Product> retrievedProducts = phoneService.findAllPhones("277.00", "277.00", new Phone());
+        List<? extends Product> retrievedProducts = phoneService.findAll("277.00", "277.00", "grön", "Blake gränden, Karlskrona");
         assertFalse(retrievedProducts.isEmpty());
         assertEquals(1, retrievedProducts.size());
         assertEquals(ProductType.PHONE, retrievedProducts.get(0).getProductType());
@@ -37,8 +37,7 @@ class ProductServiceIntegrationTest {
 
     @Test
     void givenProductServiceWhenFindPhoneByPriceRangeThenPhoneRetrieved() {
-        Product product = phoneService.save(new Phone());
-        List<Phone> retrievedProducts = (List<Phone>) phoneService.findAllPhones("276.00", "278.00", (Phone)product);
+        List<Phone> retrievedProducts = (List<Phone>) phoneService.findAll("276.00", "278.00", "grön", "Blake gränden, Karlskrona");
         assertFalse(retrievedProducts.isEmpty());
         assertEquals(1, retrievedProducts.size());
         assertEquals(ProductType.PHONE, retrievedProducts.get(0).getProductType());
