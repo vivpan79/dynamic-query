@@ -53,15 +53,17 @@ class RestProductTest {
 
     @Test
     void givenSubscriptionEntityWithMissingDataLimitWhenConvertedToRestProductThenException() {
+        final Subscription subscription = new Subscription();
         assertThrows(IllegalArgumentException.class, () -> {
-            RestProduct restProduct = new RestProduct(new Subscription());
+            new RestProduct(subscription);
         });
     }
 
     @Test
     void givenPhoneEntityWithMissingColorWhenConvertedToRestProductThenException() {
+        final Phone phone = new Phone();
         assertThrows(IllegalArgumentException.class, () -> {
-            RestProduct restProduct = new RestProduct(new Phone());
+            new RestProduct(phone);
         });
     }
 
