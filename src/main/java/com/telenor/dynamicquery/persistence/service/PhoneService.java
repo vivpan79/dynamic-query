@@ -23,22 +23,22 @@ public class PhoneService {
         return repository.save(product);
     }
 
-    public List<Phone> findAll(String minPrice, String maxPrice, String color, String city) {
+    public List<Phone> findAll(BigDecimal minPrice, BigDecimal maxPrice, String color, String city) {
         Phone phone = new Phone();
         phone.setColor(color);
         ExampleMatcher exampleMatcher = ExampleMatcher.matching().withIgnorePaths("id");
         return repository.findAll(getPhoneSpecification(minPrice, maxPrice, city, Example.of(phone, exampleMatcher)));
     }
 
-    public Specification<Phone> getPhoneSpecification(String minPrice, String maxPrice, String city,
+    public Specification<Phone> getPhoneSpecification(BigDecimal minPrice, BigDecimal maxPrice, String city,
         Example<Phone> example) {
         return (root, query, builder) -> {
             final List<Predicate> predicates = new ArrayList<>();
-            if (minPrice != null && !minPrice.isEmpty()) {
-                predicates.add(builder.greaterThanOrEqualTo(root.get("price"), new BigDecimal(minPrice)));
+            if (minPrice != null) {
+                predicates.add(builder.greaterThanOrEqualTo(root.get("price"), minPrice));
             }
-            if (maxPrice != null && !maxPrice.isEmpty()) {
-                predicates.add(builder.lessThanOrEqualTo(root.get("price"), new BigDecimal(maxPrice)));
+            if (maxPrice != null) {
+                predicates.add(builder.lessThanOrEqualTo(root.get("price"), maxPrice));
             }
             if (city != null && !city.isEmpty()) {
                 predicates.add(builder.like(root.get("storeAddress"), "%" + city + "%"));

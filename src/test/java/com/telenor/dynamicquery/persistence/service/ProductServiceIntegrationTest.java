@@ -2,6 +2,7 @@ package com.telenor.dynamicquery.persistence.service;
 
 import static com.telenor.dynamicquery.common.ProductType.PHONE;
 import static com.telenor.dynamicquery.common.ProductType.SUBSCRIPTION;
+import static java.math.BigDecimal.valueOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -29,7 +30,7 @@ class ProductServiceIntegrationTest {
 
     @Test
     void givenProductServiceWhenFindByPhoneByExactPriceMatchThenPhoneRetrieved() {
-        List<? extends Product> retrievedProducts = phoneService.findAll("277.00", "277.00", null, null);
+        List<? extends Product> retrievedProducts = phoneService.findAll(valueOf(277.00), valueOf(277.00), null, null);
 
         assertFalse(retrievedProducts.isEmpty());
         assertEquals(1, retrievedProducts.size());
@@ -41,7 +42,7 @@ class ProductServiceIntegrationTest {
 
     @Test
     void givenProductServiceWhenFindPhoneByPriceRangeThenPhoneRetrieved() {
-        List<Phone> retrievedProducts = phoneService.findAll("276.00", "278.00", null, null);
+        List<Phone> retrievedProducts = phoneService.findAll(valueOf(276.00), valueOf(278.00), null, null);
 
         assertFalse(retrievedProducts.isEmpty());
         assertEquals(1, retrievedProducts.size());
@@ -76,7 +77,7 @@ class ProductServiceIntegrationTest {
     @Test
     void givenProductServiceWhenFindSubscriptionByExactPriceMatchThenSubscriptionRetrieved() {
         List<Subscription> retrievedProducts = subscriptionService
-            .findAll("415.00", "415.00", null, null, null);
+            .findAll(valueOf(415.00), valueOf(415.00), null, null, null);
         assertFalse(retrievedProducts.isEmpty());
         assertEquals(1, retrievedProducts.size());
         assertTrue(retrievedProducts.stream().allMatch(
@@ -88,7 +89,7 @@ class ProductServiceIntegrationTest {
     @Test
     void givenProductServiceWhenFindSubscriptionByPriceRangeThenSubscriptionRetrieved() {
         List<Subscription> retrievedProducts = subscriptionService
-            .findAll("401.00", "499.00", null, null, null);
+            .findAll(valueOf(401.00), valueOf(499.00), null, null, null);
         assertFalse(retrievedProducts.isEmpty());
         assertEquals(10, retrievedProducts.size());
         assertTrue(retrievedProducts.stream().allMatch(

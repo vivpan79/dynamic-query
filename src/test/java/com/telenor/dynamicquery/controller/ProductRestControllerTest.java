@@ -1,5 +1,6 @@
 package com.telenor.dynamicquery.controller;
 
+import static java.math.BigDecimal.valueOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.BDDMockito.given;
@@ -40,7 +41,7 @@ class ProductRestControllerTest {
         Phone phone = new Phone();
         phone.setColor("blue");
         List<Phone> products = Collections.singletonList(phone);
-        given(phoneService.findAll("100", "1000", "blue", "Stockholm")).willReturn(products);
+        given(phoneService.findAll(valueOf(100), valueOf(1000), "blue", "Stockholm")).willReturn(products);
         mvc.perform(get("/products")
             .param("productType", "phone")
             .param("min_price", "100")
@@ -59,7 +60,7 @@ class ProductRestControllerTest {
         Subscription subscription = new Subscription();
         subscription.setDataLimitInGB(50L);
         List<Subscription> products = Collections.singletonList(subscription);
-        given(subscriptionService.findAll("100", "1000", 50L, 50L, "Stockholm")).willReturn(products);
+        given(subscriptionService.findAll(valueOf(100), valueOf(1000), 50L, 50L, "Stockholm")).willReturn(products);
 
         mvc.perform(get("/products")
             .param("productType", "subscription")

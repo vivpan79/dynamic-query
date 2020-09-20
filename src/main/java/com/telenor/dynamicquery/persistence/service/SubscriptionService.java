@@ -19,7 +19,7 @@ public class SubscriptionService {
     @Autowired
     private SubscriptionRepository repository;
 
-    public List<Subscription> findAll(String minPrice, String maxPrice, Long minDataLimit, Long maxDataLimit,
+    public List<Subscription> findAll(BigDecimal minPrice, BigDecimal maxPrice, Long minDataLimit, Long maxDataLimit,
         String city) {
         Subscription subscription = new Subscription();
         ExampleMatcher exampleMatcher = ExampleMatcher.matching().withIgnorePaths("id");
@@ -27,15 +27,15 @@ public class SubscriptionService {
             Example.of(subscription, exampleMatcher)));
     }
 
-    Specification<Subscription> getSubscriptionSpecification(String minPrice, String maxPrice,
+    Specification<Subscription> getSubscriptionSpecification(BigDecimal minPrice, BigDecimal maxPrice,
         Long minDataLimit, Long maxDataLimit, String city, Example<Subscription> example) {
         return (root, query, builder) -> {
             final List<Predicate> predicates = new ArrayList<>();
-            if (minPrice != null && !minPrice.isEmpty()) {
-                predicates.add(builder.greaterThanOrEqualTo(root.get("price"), new BigDecimal(minPrice)));
+            if (minPrice != null) {
+                predicates.add(builder.greaterThanOrEqualTo(root.get("price"), minPrice));
             }
-            if (maxPrice != null && !maxPrice.isEmpty()) {
-                predicates.add(builder.lessThanOrEqualTo(root.get("price"), new BigDecimal(maxPrice)));
+            if (maxPrice != null) {
+                predicates.add(builder.lessThanOrEqualTo(root.get("price"), maxPrice));
             }
             if (minDataLimit != null) {
                 predicates.add(builder.greaterThanOrEqualTo(root.get("dataLimitInGB"), minDataLimit));
